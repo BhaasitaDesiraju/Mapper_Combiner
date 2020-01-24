@@ -1,0 +1,1 @@
+(1111,P,history        ),(1111,S,entertainment  ),(1111,L,history        ),(1111,L,cosmetics      ),(2222,L,sports         ),(2222,S,sports         ),(3333,S,photography    ),(3333,L,art            ),(3333,P,art            )
