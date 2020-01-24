@@ -77,7 +77,7 @@ int main() {
             //get action
             action = input[6];
             result = processTuples(action, output);
-            printf("%s", result);
+//            printf("%s", result);
             fprintf(outputFile, "%s", result);
             fflush(outputFile);
         }

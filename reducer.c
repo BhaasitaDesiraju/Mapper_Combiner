@@ -10,11 +10,9 @@ struct tuple {
     struct node *next;
 };
 
-void printTuples(struct tuple *head, FILE *outputFile) {
+void printTuples(struct tuple *head) {
     while (head) {
         printf("(%s,%s,%d)\n", head->userId, head->topic, head->score);
-        fprintf(outputFile, "(%s,%s,%d)\n", head->userId, head->topic, head->score);
-        fflush(outputFile);
         if (head->next == NULL)
             break;
         head = (struct tuple *) head->next;
@@ -52,27 +50,27 @@ void insertTuple(const struct tuple *head, struct tuple *temp) {
 
 int main() {
 
-    FILE *inputFile, *outputFile;
+    FILE *inputFile;
     char inputBuffer[100];
     char *tokens;
     struct tuple *head = NULL, *temp;
 
-    //opening input and output files
+    //opening input file
     inputFile = fopen("output.txt", "r");
-    outputFile = fopen("reducer_output.txt", "w");
 
-    if (inputFile && outputFile) {
+    if (inputFile) {
         while (fgets(inputBuffer, 100, inputFile) != NULL) {
+            fflush(stdout);
             temp = (struct tuple *) malloc(sizeof(struct tuple));
             tokens = strtok(inputBuffer, ",");
 
             //gets the userId
             temp->userId = (char *) malloc((strlen(tokens) - 1) * sizeof(char));
-            strcpy(temp->userId, &tokens[1]);
+            strncpy(temp->userId, &tokens[1], 4);
 
             //gets the topic
             tokens = strtok(NULL, ",");
-            strcpy(temp->topic, tokens);
+            strncpy(temp->topic, tokens, 15);
 
             //gets the score
             tokens = strtok(NULL, ")");
@@ -87,7 +85,7 @@ int main() {
             else {
                 //checking for similar userIds
                 if (strcmp(head->userId, temp->userId) != 0) {
-                    printTuples(head, outputFile);
+                    printTuples(head);
                     removeTuples(head);
                     head = temp;
                 }
@@ -95,9 +93,8 @@ int main() {
                     insertTuple(head, temp);
             }
         }
-        printTuples(head, outputFile);
+        printTuples(head);
         fclose(inputFile);
-        fclose(outputFile);
     }
     else {
         fprintf(stderr, "Cannot open file.\n");
